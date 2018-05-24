@@ -8,9 +8,10 @@
 
 /* Begin PBXBuildFile section */
 		087196EA20B6C00600151EBD /* MDOperationQueue+Private.h in Headers */ = {isa = PBXBuildFile; fileRef = 087196E920B6C00500151EBD /* MDOperationQueue+Private.h */; };
+		087196EC20B6C7EA00151EBD /* OperationQueue.h in Headers */ = {isa = PBXBuildFile; fileRef = 087196EB20B6C41C00151EBD /* OperationQueue.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		08A51FA120A53CA7007B3E63 /* MDOperationQueue.h in Headers */ = {isa = PBXBuildFile; fileRef = 08A51F9F20A53CA7007B3E63 /* MDOperationQueue.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		08A51FAB20A53D20007B3E63 /* MDOperationQueue.m in Sources */ = {isa = PBXBuildFile; fileRef = 08A51FA720A53D1F007B3E63 /* MDOperationQueue.m */; };
-		08A51FAC20A53D20007B3E63 /* MDOperation.h in Headers */ = {isa = PBXBuildFile; fileRef = 08A51FA820A53D1F007B3E63 /* MDOperation.h */; };
+		08A51FAC20A53D20007B3E63 /* MDOperation.h in Headers */ = {isa = PBXBuildFile; fileRef = 08A51FA820A53D1F007B3E63 /* MDOperation.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		08A51FAD20A53D20007B3E63 /* MDOperation+Private.h in Headers */ = {isa = PBXBuildFile; fileRef = 08A51FA920A53D1F007B3E63 /* MDOperation+Private.h */; };
 		08A51FAE20A53D20007B3E63 /* MDOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = 08A51FAA20A53D1F007B3E63 /* MDOperation.m */; };
 		08A51FB620A540C4007B3E63 /* MDOperationQueueTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 08A51FB520A540C4007B3E63 /* MDOperationQueueTests.m */; };
@@ -113,6 +114,7 @@
 				08A51FAD20A53D20007B3E63 /* MDOperation+Private.h in Headers */,
 				087196EA20B6C00600151EBD /* MDOperationQueue+Private.h in Headers */,
 				08A51FAC20A53D20007B3E63 /* MDOperation.h in Headers */,
+				087196EC20B6C7EA00151EBD /* OperationQueue.h in Headers */,
 				08A51FA120A53CA7007B3E63 /* MDOperationQueue.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

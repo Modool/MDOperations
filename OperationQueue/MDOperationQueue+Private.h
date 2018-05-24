@@ -7,6 +7,7 @@
 //
 
 #import "MDOperationQueue.h"
+#import "MDOperation.h"
 
 @interface MDOperation (MDOperationQueue)
 
