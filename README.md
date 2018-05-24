@@ -1,4 +1,4 @@
-# MDOperationQueue
+# MDOperations
 
 [![](https://img.shields.io/travis/rust-lang/rust.svg?style=flat)](https://github.com/Modool)
 [![](https://img.shields.io/badge/language-Object--C-1eafeb.svg?style=flat)](https://developer.apple.com/Objective-C)
@@ -12,7 +12,7 @@
 
 ## How To Get Started
 
-* Download `MDOperationQueue ` and try run example app
+* Download `MDOperations ` and try run example app
 
 ## Installation
 
@@ -24,7 +24,7 @@ source 'https://github.com/Modool/cocoapods-specs.git'
 platform :ios, '8.0'
 
 target 'TargetName' do
-pod 'MDOperationQueue', '~> 1.0.0'
+pod 'MDOperations', '~> 1.0.0'
 end
 
 ```
@@ -32,13 +32,13 @@ end
 * Installation with Carthage
 
 ```
-github "Modool/MDOperationQueue" ~> 1.0.0
+github "Modool/MDOperations" ~> 1.0.0
 ```
 
 * Manual Import
 
 ```
-drag “MDOperationQueue” directory into your project
+drag “MDOperations” directory into your project
 
 ```
 
@@ -55,7 +55,7 @@ drag “MDOperationQueue” directory into your project
 * 2018.5.11 Add README and adjust project class name.
 
 ## License
-`MDOperationQueue` is released under the MIT license. See LICENSE for details.
+`MDOperations` is released under the MIT license. See LICENSE for details.
 
 ## Communication
 
