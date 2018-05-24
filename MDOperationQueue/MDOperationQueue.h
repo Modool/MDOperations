@@ -18,20 +18,21 @@ FOUNDATION_EXPORT const unsigned char MDOperationQueueVersionString[];
 
 @interface MDOperationQueue : NSObject
 
-@property (nonatomic, assign, readonly, getter=isExecuting) BOOL executing;
+@property (copy, readonly) NSArray<MDOperation *> *operations;
 
-@property (nonatomic, assign, readonly, getter=isCanceled) BOOL canceled;
+@property (strong, readonly) dispatch_queue_t queue;
 
-@property (nonatomic, copy, readonly) NSArray<MDOperation *> *operations;
+@property (assign, readonly, getter=isExecuting) BOOL executing;
+
+@property (assign, readonly, getter=isCanceled) BOOL canceled;
 
 // Default is NSUIntegerMax
-@property (nonatomic, assign) NSUInteger maximumConcurrentCount;
+@property (assign) NSUInteger maximumConcurrentCount;
 
-@property (nonatomic, copy) void (^completion)(MDOperationQueue *queue, BOOL success);
+@property (copy) void (^completion)(MDOperationQueue *queue, BOOL success);
 
 + (instancetype)queue;
 + (instancetype)queueWithOperations:(NSArray<MDOperation *> *)operations;
-
 - (instancetype)initWithOperations:(NSArray<MDOperation *> *)operations;
 
 - (void)addOperation:(MDOperation *)operation;
@@ -40,7 +41,7 @@ FOUNDATION_EXPORT const unsigned char MDOperationQueueVersionString[];
 - (void)schedule;
 - (void)cancel;
 
-- (long)wait:(NSTimeInterval)timeout;
+- (long)wait:(dispatch_time_t)timeout;
 - (long)waitUntilFinished;
 
 @end

@@ -7,24 +7,15 @@
 //
 
 #import "MDOperationQueue.h"
+#import "MDOperationQueue+Private.h"
 #import "MDOperation+Private.h"
 
-NSString * const MDOperationQueueDomainPrefix = @"com.modool.operation.queue#";
+NSString * const MDOperationQueueDomainPrefix = @"com.markejave.modool.operation.queue";
 
-@interface MDOperationQueue () {
-    NSUInteger _maximumConcurrentCount;
-    BOOL _executing;
-    BOOL _canceled;
-}
+@implementation MDOperation (MDOperationQueue)
 
-@property (nonatomic, strong) NSMutableArray<MDOperation *> *mutableOperations;
-@property (nonatomic, strong) NSMutableArray<MDOperation *> *excutingOperations;
-
-@property (nonatomic, strong) dispatch_queue_t operationQueue;
-@property (nonatomic, strong) dispatch_group_t group;
-
-@property (nonatomic, strong) dispatch_queue_t queue;
-@property (nonatomic, assign) void *queueTag;
+- (void)prepareInQueue:(MDOperationQueue *)queue;{}
+- (void)completeInQueue:(MDOperationQueue *)queue;{}
 
 @end
 
@@ -41,19 +32,14 @@ NSString * const MDOperationQueueDomainPrefix = @"com.modool.operation.queue#";
 
 - (instancetype)initWithOperations:(NSArray<MDOperation *> *)operations;{
     if (self = [super init]) {
-        self.mutableOperations = [NSMutableArray arrayWithArray:operations ?: @[]];
-        self.excutingOperations = [NSMutableArray new];
-        self.maximumConcurrentCount = NSUIntegerMax;
+        _lock = [[NSRecursiveLock alloc] init];
+        _mutableOperations = [NSMutableArray arrayWithArray:operations ?: @[]];
+        _excutingOperations = [NSMutableArray new];
+        _maximumConcurrentCount = NSUIntegerMax;
         
-        NSString *operationQueueName = [MDOperationQueueDomainPrefix stringByAppendingFormat:@"%@#Concurrent#%lu", NSStringFromClass([self class]), (unsigned long)self];
-        self.operationQueue = dispatch_queue_create([operationQueueName UTF8String], DISPATCH_QUEUE_CONCURRENT);
-        
-        NSString *queueName = [NSString stringWithFormat:@"%@%lu", MDOperationQueueDomainPrefix, (unsigned long)self];
-        self.queueTag = &_queueTag;
-        self.queue = dispatch_queue_create([queueName UTF8String], NULL);
-        dispatch_queue_set_specific([self queue], _queueTag, _queueTag, NULL);
-        
-        self.group = dispatch_group_create();
+        NSString *queueName = [MDOperationQueueDomainPrefix stringByAppendingFormat:@"%@#Concurrent#%lu", NSStringFromClass([self class]), (unsigned long)self];
+        _queue = dispatch_queue_create([queueName UTF8String], DISPATCH_QUEUE_CONCURRENT);
+        _group = dispatch_group_create();
     }
     return self;
 }
@@ -61,176 +47,157 @@ NSString * const MDOperationQueueDomainPrefix = @"com.modool.operation.queue#";
 #pragma mark - accessor
 
 - (NSArray<MDOperation *> *)operations{
-    __block NSArray<MDOperation *> *operations = nil;
-    dispatch_block_t block = ^{
-        operations = [[self mutableOperations] copy];
-    };
-    
-    [self _sync:block];
+    [_lock lock];
+    NSArray<MDOperation *> *operations = [_mutableOperations copy];
+    [_lock unlock];
     
     return operations;
 }
 
 - (NSUInteger)maximumConcurrentCount{
-    __block NSUInteger maximumConcurrentCount = 0;
-    dispatch_block_t block = ^{
-        maximumConcurrentCount = self->_maximumConcurrentCount;
-    };
-    
-    [self _sync:block];
+    [_lock lock];
+    NSUInteger maximumConcurrentCount = _maximumConcurrentCount;
+    [_lock unlock];
     
     return maximumConcurrentCount;
 }
 
 - (void)setMaximumConcurrentCount:(NSUInteger)maximumConcurrentCount{
-    dispatch_block_t block = ^{
-        self->_maximumConcurrentCount = maximumConcurrentCount;
-    };
-    
-    [self _sync:block];
+    [_lock lock];
+    _maximumConcurrentCount = maximumConcurrentCount;
+    [_lock unlock];
 }
 
 - (BOOL)isExecuting{
-    __block BOOL executing = NO;
-    [self _sync:^{
-        executing = self->_executing;
-    }];
+    [_lock lock];
+    BOOL executing = _executing;
+    [_lock unlock];
+    
     return executing;
 }
 
 - (BOOL)isCanceled{
-    __block BOOL canceled = NO;
-    [self _sync:^{
-        canceled = self->_canceled;
-    }];
+    [_lock lock];
+    BOOL canceled = self->_canceled;
+    [_lock unlock];
+    
     return canceled;
+}
+
+- (void)setCompletion:(void (^)(MDOperationQueue *, BOOL))completion{
+    [_lock lock];
+    _completion = [completion copy];
+    [_lock unlock];
+}
+
+- (void (^)(MDOperationQueue *, BOOL))completion{
+    [_lock lock];
+    void (^completion)(MDOperationQueue *, BOOL) = [_completion copy];
+    [_lock unlock];
+    return completion;
+}
+
+- (dispatch_queue_t)queue{
+    [_lock lock];
+    dispatch_queue_t queue = _queue;
+    [_lock unlock];
+    return queue;
 }
 
 #pragma mark - public
 
 - (void)addOperation:(MDOperation *)operation;{
-    NSParameterAssert(operation);
+    if (!operation) return;
     
     [self addOperations:@[operation]];
 }
 
 - (void)addOperations:(NSArray<MDOperation *> *)operations;{
-    NSParameterAssert(operations);
     if (![operations count]) return;
-    
-    dispatch_block_t block = ^{
-        [self _addOperations:operations];
-    };
-    
-    [self _sync:block];
+    [_lock lock];
+    [self _addOperations:operations];
+    [_lock unlock];
 }
 
 - (void)schedule;{
     NSParameterAssert(![self isExecuting]);
     
-    dispatch_block_t block = ^{
-        [self _schedule];
-    };
-    
-    [self _sync:block];
+    [_lock lock];
+    [self _schedule];
+    [_lock unlock];
 }
 
 - (void)cancel;{
-    dispatch_block_t block = ^{
-        [self _cancel];
-    };
-    
-    [self _sync:block];
+    [_lock lock];
+    [self _cancel];
+    [_lock unlock];
 }
 
-- (long)wait:(NSTimeInterval)timeout;{
-    NSAssert(![[NSThread currentThread] isMainThread], @"Can't in mainthread");
-    if (!self.executing) return 0;
-    
-    dispatch_time_t time = 0;
+- (long)wait:(dispatch_time_t)timeout;{
     if (isless(timeout, 0.0)) {
-        time = DISPATCH_TIME_FOREVER;
+        timeout = DISPATCH_TIME_FOREVER;
     } else {
-        time = dispatch_time(DISPATCH_TIME_NOW, (timeout * NSEC_PER_SEC));
+        timeout = dispatch_time(DISPATCH_TIME_NOW, (timeout * NSEC_PER_SEC));
     }
     
-    __block dispatch_group_t group;
-    [self _sync:^{
-        group = self->_group;
-    }];
-    return dispatch_group_wait(group, time);;
+    return [self _wait:timeout];
 }
 
 - (long)waitUntilFinished;{
-    return [self wait:-1];
+    return [self _wait:DISPATCH_TIME_FOREVER];
 }
 
 #pragma mark - private
 
-- (void)_async:(dispatch_block_t)block;{
-    if (dispatch_get_specific(_queueTag)) {
-        block();
-    } else {
-        dispatch_async([self queue], block);
-    }
-}
-
-- (void)_sync:(dispatch_block_t)block;{
-    if (dispatch_get_specific(_queueTag)) {
-        block();
-    } else {
-        dispatch_sync([self queue], block);
-    }
-}
-
 - (void)_cancel{
-    dispatch_suspend([self operationQueue]);
+    dispatch_suspend(_queue);
     
-    for (MDOperation *operation in [self mutableOperations]) {
+    for (MDOperation *operation in _mutableOperations) {
         [operation cancel];
     }
     
-    for (MDOperation *operation in [self excutingOperations]) {
+    for (MDOperation *operation in _excutingOperations) {
         [operation cancel];
     }
     
-    [[self mutableOperations] removeAllObjects];
+    [_mutableOperations removeAllObjects];
     
     _canceled = YES;
     
-    dispatch_resume([self operationQueue]);
+    dispatch_resume(_queue);
 }
 
 - (void)_addOperations:(NSArray<MDOperation *> *)operations;{
-    dispatch_suspend([self operationQueue]);
+    dispatch_suspend(_queue);
     
-    [operations setValue:@YES forKey:@"runInQueue"];
-    [[self mutableOperations] addObjectsFromArray:operations];
+    [_mutableOperations addObjectsFromArray:operations];
     
     if (_executing) [self _schedule];
     
-    dispatch_resume([self operationQueue]);
+    dispatch_resume(_queue);
 }
 
 - (void)_schedule{
-    NSArray<MDOperation *> *operations = [self operations];
-    if (![operations count]) return;
+    NSArray<MDOperation *> *operations = _mutableOperations.copy;
+    if(![operations count]) return;
     
-    NSUInteger count = MIN([self maximumConcurrentCount] - [[self excutingOperations] count], [operations count]);
+    NSUInteger count = MIN(_maximumConcurrentCount - [_excutingOperations count], [operations count]);
     if (!count) return;
     
     operations = [operations subarrayWithRange:NSMakeRange(0, count)];
-    if (![operations count]) return;
+    if(![operations count]) return;
     
-    [[self mutableOperations] removeObjectsInArray:operations];
+    [_mutableOperations removeObjectsInArray:operations];
     
     _canceled = NO;
-    
+    [self _willBeginSchedule];
     [self _scheduleOperations:operations];
 }
 
 - (void)_scheduleOperations:(NSArray<MDOperation *> *)operations{
-    [[self excutingOperations] addObjectsFromArray:operations];
+    if(![operations count]) return;
+    
+    [_excutingOperations addObjectsFromArray:operations];
     
     NSMutableArray<MDOperation *> *synchronousOperations = [NSMutableArray<MDOperation *> new];
     for (MDOperation *operation in operations) {
@@ -249,49 +216,70 @@ NSString * const MDOperationQueueDomainPrefix = @"com.modool.operation.queue#";
 }
 
 - (void)_runOperation:(MDOperation *)operation{
-    NSParameterAssert(operation);
+    if(!operation) return;
     
     [self _runOperations:@[operation]];
 }
 
 - (void)_runOperations:(NSArray<MDOperation *> *)operations{
+    if(![operations count]) return;
     _executing = YES;
     
-    dispatch_group_async([self group], [self operationQueue], ^{
+    dispatch_group_async(_group, _queue, ^{
         for (MDOperation *operation in operations) {
             [self _runMainWithOpeartion:operation];
+            [self _completeWithOperation:operation];
         }
     });
 }
 
 - (void)_runMainWithOpeartion:(MDOperation *)operation{
-    [operation _synchronize];
-    
-    dispatch_block_t block = ^{
-        [self _completeWithOperation:operation];
-    };
-    
-    [self _sync:block];
+    dispatch_sync([operation queue], ^{
+        [operation prepareInQueue:self];
+        [operation main];
+        [operation completeInQueue:self];
+    });
 }
 
 - (void)_completeWithOperation:(MDOperation *)operation{
-    [[self excutingOperations] removeObject:operation];
-    
-    if ([[self mutableOperations] count]) {
-        [self _schedule];
-    } else {
+    [_lock lock];
+    [_excutingOperations removeObject:operation];
+    BOOL continued = [_mutableOperations count] > 0;
+    if (!continued) {
         [self _completeForCanceled:[operation isCancelled]];
+    }
+    [_lock unlock];
+    
+    if (continued) {
+        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0), ^{
+            [self->_lock lock];
+            [self _schedule];
+            [self->_lock unlock];
+        });
     }
 }
 
 - (void)_completeForCanceled:(BOOL)canceled{
     _executing = NO;
     
-    if (!_completion) return;
-    
-    dispatch_async(dispatch_get_main_queue(), ^{
-        self->_completion(self, !canceled && !self->_canceled);
-    });
+    if (_completion) {
+        dispatch_async(dispatch_get_main_queue(), ^{
+            self->_completion(self, !canceled && !self->_canceled);
+        });
+    }
+    [self _didEndSchedule];
 }
+
+- (long)_wait:(dispatch_time_t)timeout;{
+    [_lock lock];
+    dispatch_group_t group = _group;
+    [_lock unlock];
+    
+    return dispatch_group_wait(group, timeout);
+}
+
+- (void)_willBeginSchedule;{}
+
+- (void)_didEndSchedule;{}
 
 @end

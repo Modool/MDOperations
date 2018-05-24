@@ -9,21 +9,20 @@
 #import <Foundation/Foundation.h>
 
 @interface MDOperation : NSObject
+@property (strong, readonly) dispatch_queue_t queue;
 
-@property (nonatomic, assign, readonly, getter=isConcurrent) BOOL concurrent;
+@property (assign, readonly, getter=isExecuting) BOOL executing;
 
-@property (nonatomic, assign, readonly, getter=isExecuting) BOOL executing;
+@property (assign, readonly, getter=isFinished) BOOL finished;
 
-@property (nonatomic, assign, readonly, getter=isFinished) BOOL finished;
+@property (assign, readonly, getter=isCancelled) BOOL cancelled;
 
-@property (nonatomic, assign, readonly, getter=isCancelled) BOOL cancelled;
+@property (assign, getter=isConcurrent) BOOL concurrent;
 
-+ (instancetype)operationWithConcurrent:(BOOL)concurrent block:(void (^)(MDOperation *operation))block;
-- (instancetype)initWithConcurrent:(BOOL)concurrent block:(void (^)(MDOperation *operation))block;
+@property (copy) void (^block)(MDOperation *operation);
 
+- (void)cancel;
 - (void)synchronize;
 - (void)asynchronize;
-- (void)asynchronizeWithCompletion:(void (^)(MDOperation *operation))completion;
-- (void)cancel;
 
 @end

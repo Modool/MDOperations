@@ -9,7 +9,7 @@
 #import "MDOperation.h"
 #import "MDOperation+Private.h"
 
-NSString * const MDOperationDomainPrefix = @"com.modool.operation#";
+NSString * const MDOperationDomainPrefix = @"com.markejave.modool.operation";
 
 @implementation MDOperation
 
@@ -18,21 +18,21 @@ NSString * const MDOperationDomainPrefix = @"com.modool.operation#";
 }
 
 - (instancetype)initWithConcurrent:(BOOL)concurrent block:(void (^)(MDOperation *operation))block;{
-    if (self = [self init]) {
-        self.concurrent = concurrent;
-        self.block = block;
+    if (self = [super init]) {
+        _name = [NSString stringWithFormat:@"%@%lu", MDOperationDomainPrefix, (unsigned long)self];
+        _queue = dispatch_queue_create([_name UTF8String], NULL);
+        
+        _queueTag = &_queueTag;
+        dispatch_queue_set_specific(_queue, _queueTag, _queueTag, NULL);
+        
+        _concurrent = concurrent;
+        _block = block;
     }
     return self;
 }
 
 - (instancetype)init{
-    if (self = [super init]) {
-        NSString *queueName = [NSString stringWithFormat:@"%@%lu", MDOperationDomainPrefix, (unsigned long)self];
-        self.queueTag = &_queueTag;
-        self.queue = dispatch_queue_create([queueName UTF8String], NULL);
-        dispatch_queue_set_specific([self queue], _queueTag, _queueTag, NULL);
-    }
-    return self;
+    return [self initWithConcurrent:NO block:nil];
 }
 
 #pragma mark - accessor
@@ -45,26 +45,74 @@ NSString * const MDOperationDomainPrefix = @"com.modool.operation#";
     return concurrent;
 }
 
+- (void)setConcurrent:(BOOL)concurrent{
+    [self _sync:^{
+        self->_concurrent = concurrent;
+    }];
+}
+
+- (BOOL)isExecuting{
+    __block BOOL executing = NO;
+    [self _sync:^{
+        executing = self->_executing;
+    }];
+    return executing;
+}
+
+- (BOOL)isFinished{
+    __block BOOL finished = NO;
+    [self _sync:^{
+        finished = self->_finished;
+    }];
+    return finished;
+}
+
+- (BOOL)isCancelled{
+    __block BOOL cancelled = NO;
+    [self _sync:^{
+        cancelled = self->_cancelled;
+    }];
+    return cancelled;
+}
+
+- (void (^)(MDOperation *))block{
+    __block void (^block)(MDOperation *);
+    [self _sync:^{
+        block = self->_block;
+    }];
+    return block;
+}
+
+- (void)setBlock:(void (^)(MDOperation *))block{
+    [self _sync:^{
+        self->_block = block;
+    }];
+}
+
+- (dispatch_queue_t)queue{
+    __block dispatch_queue_t queue = nil;
+    [self _sync:^{
+        queue = self->_queue;
+    }];
+    return queue;
+}
+
 #pragma mark - public
-
-- (void)synchronize;{
-    if (_runInQueue) return;
-    
-    [self _synchronize];
-}
-
-- (void)asynchronize;{
-    [self asynchronizeWithCompletion:nil];
-}
-
-- (void)asynchronizeWithCompletion:(void (^)(MDOperation *operation))completion;{
-    if (_runInQueue) return;
-    
-    [self _asynchronizeWithCompletion:completion];
-}
 
 - (void)cancel;{
     _cancelled = YES;
+}
+
+- (void)synchronize;{
+    [self _sync:^{
+        [self main];
+    }];
+}
+
+- (void)asynchronize;{
+    [self _async:^{
+        [self main];
+    }];
 }
 
 #pragma mark - private
@@ -85,39 +133,19 @@ NSString * const MDOperationDomainPrefix = @"com.modool.operation#";
     }
 }
 
-- (void)_synchronize;{
-    [self _sync:^{
-        [self main];
-    }];
-}
-
-- (void)_asynchronizeWithCompletion:(void (^)(MDOperation *operation))completion;{
-    [self _async:^{
-        [self main];
-        
-        if (completion) { dispatch_async(dispatch_get_main_queue(), ^{
-            completion(self);
-        });};
-    }];
-}
-
-#pragma mark - protected
-
 - (void)main{
     if (_cancelled) return;
     if (_finished) return;
     
     _executing = YES;
     
-    if ([self block]) self.block(self);
+    if (_block) _block(self);
     [self run];
     
     _executing = NO;
     _finished = YES;
 }
 
-- (void)run;{
-    
-}
+- (void)run;{}
 
 @end

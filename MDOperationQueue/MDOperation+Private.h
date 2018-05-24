@@ -8,22 +8,21 @@
 
 #import "MDOperation.h"
 
-@interface MDOperation ()
+@interface MDOperation (){
+    void *_queueTag;
+    
+    NSString *_name;
+    dispatch_queue_t _queue;
+    
+    BOOL _concurrent;
+    BOOL _executing;
+    BOOL _finished;
+    BOOL _cancelled;
+    void (^_block)(MDOperation *operation);
+}
 
-@property (nonatomic, strong) dispatch_queue_t queue;
-@property (nonatomic, assign) void *queueTag;
-
-@property (nonatomic, assign, getter=isRunningInQueue) BOOL runInQueue;
-@property (nonatomic, assign, getter=isConcurrent) BOOL concurrent;
-
-@property (nonatomic, copy) void (^block)(MDOperation *operation);
-
-@end
-
-@interface MDOperation (BBLinkPrivate)
-
-- (void)_synchronize;
-- (void)_asynchronizeWithCompletion:(void (^)(MDOperation *operation))completion;
+- (void)_async:(dispatch_block_t)block;
+- (void)_sync:(dispatch_block_t)block;
 
 - (void)main;
 - (void)run;

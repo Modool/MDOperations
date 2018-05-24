@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		087196EA20B6C00600151EBD /* MDOperationQueue+Private.h in Headers */ = {isa = PBXBuildFile; fileRef = 087196E920B6C00500151EBD /* MDOperationQueue+Private.h */; };
 		08A51FA120A53CA7007B3E63 /* MDOperationQueue.h in Headers */ = {isa = PBXBuildFile; fileRef = 08A51F9F20A53CA7007B3E63 /* MDOperationQueue.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		08A51FAB20A53D20007B3E63 /* MDOperationQueue.m in Sources */ = {isa = PBXBuildFile; fileRef = 08A51FA720A53D1F007B3E63 /* MDOperationQueue.m */; };
 		08A51FAC20A53D20007B3E63 /* MDOperation.h in Headers */ = {isa = PBXBuildFile; fileRef = 08A51FA820A53D1F007B3E63 /* MDOperation.h */; };
@@ -27,6 +28,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		087196E920B6C00500151EBD /* MDOperationQueue+Private.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "MDOperationQueue+Private.h"; sourceTree = "<group>"; };
 		08A51F9C20A53CA7007B3E63 /* MDOperationQueue.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = MDOperationQueue.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		08A51F9F20A53CA7007B3E63 /* MDOperationQueue.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MDOperationQueue.h; sourceTree = "<group>"; };
 		08A51FA020A53CA7007B3E63 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -79,6 +81,7 @@
 		08A51F9E20A53CA7007B3E63 /* MDOperationQueue */ = {
 			isa = PBXGroup;
 			children = (
+				087196E920B6C00500151EBD /* MDOperationQueue+Private.h */,
 				08A51F9F20A53CA7007B3E63 /* MDOperationQueue.h */,
 				08A51FA720A53D1F007B3E63 /* MDOperationQueue.m */,
 				08A51FA820A53D1F007B3E63 /* MDOperation.h */,
@@ -106,6 +109,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				08A51FAD20A53D20007B3E63 /* MDOperation+Private.h in Headers */,
+				087196EA20B6C00600151EBD /* MDOperationQueue+Private.h in Headers */,
 				08A51FAC20A53D20007B3E63 /* MDOperation.h in Headers */,
 				08A51FA120A53CA7007B3E63 /* MDOperationQueue.h in Headers */,
 			);
