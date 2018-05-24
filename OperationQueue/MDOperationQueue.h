@@ -8,14 +8,7 @@
 
 #import <UIKit/UIKit.h>
 
-//! Project version number for MDOperationQueue.
-FOUNDATION_EXPORT double MDOperationQueueVersionNumber;
-
-//! Project version string for MDOperationQueue.
-FOUNDATION_EXPORT const unsigned char MDOperationQueueVersionString[];
-
-#import "MDOperation.h"
-
+@class MDOperation;
 @interface MDOperationQueue : NSObject
 
 @property (copy, readonly) NSArray<MDOperation *> *operations;

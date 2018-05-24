@@ -282,4 +282,10 @@ NSString * const MDOperationQueueDomainPrefix = @"com.markejave.modool.operation
 
 - (void)_didEndSchedule;{}
 
+- (void)_lock:(void (^)(void))block;{
+    [_lock lock];
+    block();
+    [_lock unlock];
+}
+
 @end

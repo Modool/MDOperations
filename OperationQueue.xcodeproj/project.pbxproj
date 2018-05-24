@@ -14,7 +14,7 @@
 		08A51FAD20A53D20007B3E63 /* MDOperation+Private.h in Headers */ = {isa = PBXBuildFile; fileRef = 08A51FA920A53D1F007B3E63 /* MDOperation+Private.h */; };
 		08A51FAE20A53D20007B3E63 /* MDOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = 08A51FAA20A53D1F007B3E63 /* MDOperation.m */; };
 		08A51FB620A540C4007B3E63 /* MDOperationQueueTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 08A51FB520A540C4007B3E63 /* MDOperationQueueTests.m */; };
-		08A51FB820A540C4007B3E63 /* MDOperationQueue.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 08A51F9C20A53CA7007B3E63 /* MDOperationQueue.framework */; };
+		08A51FB820A540C4007B3E63 /* OperationQueue.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 08A51F9C20A53CA7007B3E63 /* OperationQueue.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -29,14 +29,15 @@
 
 /* Begin PBXFileReference section */
 		087196E920B6C00500151EBD /* MDOperationQueue+Private.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "MDOperationQueue+Private.h"; sourceTree = "<group>"; };
-		08A51F9C20A53CA7007B3E63 /* MDOperationQueue.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = MDOperationQueue.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		087196EB20B6C41C00151EBD /* OperationQueue.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = OperationQueue.h; sourceTree = "<group>"; };
+		08A51F9C20A53CA7007B3E63 /* OperationQueue.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = OperationQueue.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		08A51F9F20A53CA7007B3E63 /* MDOperationQueue.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MDOperationQueue.h; sourceTree = "<group>"; };
 		08A51FA020A53CA7007B3E63 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		08A51FA720A53D1F007B3E63 /* MDOperationQueue.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MDOperationQueue.m; sourceTree = "<group>"; };
 		08A51FA820A53D1F007B3E63 /* MDOperation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MDOperation.h; sourceTree = "<group>"; };
 		08A51FA920A53D1F007B3E63 /* MDOperation+Private.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "MDOperation+Private.h"; sourceTree = "<group>"; };
 		08A51FAA20A53D1F007B3E63 /* MDOperation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MDOperation.m; sourceTree = "<group>"; };
-		08A51FB320A540C4007B3E63 /* MDOperationQueueTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = MDOperationQueueTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		08A51FB320A540C4007B3E63 /* OperationQueueTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = OperationQueueTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		08A51FB520A540C4007B3E63 /* MDOperationQueueTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MDOperationQueueTests.m; sourceTree = "<group>"; };
 		08A51FB720A540C4007B3E63 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -53,7 +54,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				08A51FB820A540C4007B3E63 /* MDOperationQueue.framework in Frameworks */,
+				08A51FB820A540C4007B3E63 /* OperationQueue.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -63,8 +64,8 @@
 		08A51F9220A53CA7007B3E63 = {
 			isa = PBXGroup;
 			children = (
-				08A51F9E20A53CA7007B3E63 /* MDOperationQueue */,
-				08A51FB420A540C4007B3E63 /* MDOperationQueueTests */,
+				08A51F9E20A53CA7007B3E63 /* OperationQueue */,
+				08A51FB420A540C4007B3E63 /* OperationQueueTests */,
 				08A51F9D20A53CA7007B3E63 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -72,33 +73,34 @@
 		08A51F9D20A53CA7007B3E63 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				08A51F9C20A53CA7007B3E63 /* MDOperationQueue.framework */,
-				08A51FB320A540C4007B3E63 /* MDOperationQueueTests.xctest */,
+				08A51F9C20A53CA7007B3E63 /* OperationQueue.framework */,
+				08A51FB320A540C4007B3E63 /* OperationQueueTests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
 		};
-		08A51F9E20A53CA7007B3E63 /* MDOperationQueue */ = {
+		08A51F9E20A53CA7007B3E63 /* OperationQueue */ = {
 			isa = PBXGroup;
 			children = (
-				087196E920B6C00500151EBD /* MDOperationQueue+Private.h */,
+				087196EB20B6C41C00151EBD /* OperationQueue.h */,
 				08A51F9F20A53CA7007B3E63 /* MDOperationQueue.h */,
 				08A51FA720A53D1F007B3E63 /* MDOperationQueue.m */,
+				087196E920B6C00500151EBD /* MDOperationQueue+Private.h */,
 				08A51FA820A53D1F007B3E63 /* MDOperation.h */,
 				08A51FAA20A53D1F007B3E63 /* MDOperation.m */,
 				08A51FA920A53D1F007B3E63 /* MDOperation+Private.h */,
 				08A51FA020A53CA7007B3E63 /* Info.plist */,
 			);
-			path = MDOperationQueue;
+			path = OperationQueue;
 			sourceTree = "<group>";
 		};
-		08A51FB420A540C4007B3E63 /* MDOperationQueueTests */ = {
+		08A51FB420A540C4007B3E63 /* OperationQueueTests */ = {
 			isa = PBXGroup;
 			children = (
 				08A51FB520A540C4007B3E63 /* MDOperationQueueTests.m */,
 				08A51FB720A540C4007B3E63 /* Info.plist */,
 			);
-			path = MDOperationQueueTests;
+			path = OperationQueueTests;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -118,9 +120,9 @@
 /* End PBXHeadersBuildPhase section */
 
 /* Begin PBXNativeTarget section */
-		08A51F9B20A53CA7007B3E63 /* MDOperationQueue */ = {
+		08A51F9B20A53CA7007B3E63 /* OperationQueue */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 08A51FA420A53CA7007B3E63 /* Build configuration list for PBXNativeTarget "MDOperationQueue" */;
+			buildConfigurationList = 08A51FA420A53CA7007B3E63 /* Build configuration list for PBXNativeTarget "OperationQueue" */;
 			buildPhases = (
 				08A51F9720A53CA7007B3E63 /* Sources */,
 				08A51F9820A53CA7007B3E63 /* Frameworks */,
@@ -131,14 +133,14 @@
 			);
 			dependencies = (
 			);
-			name = MDOperationQueue;
+			name = OperationQueue;
 			productName = MDOperationQueue;
-			productReference = 08A51F9C20A53CA7007B3E63 /* MDOperationQueue.framework */;
+			productReference = 08A51F9C20A53CA7007B3E63 /* OperationQueue.framework */;
 			productType = "com.apple.product-type.framework";
 		};
-		08A51FB220A540C4007B3E63 /* MDOperationQueueTests */ = {
+		08A51FB220A540C4007B3E63 /* OperationQueueTests */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 08A51FBB20A540C4007B3E63 /* Build configuration list for PBXNativeTarget "MDOperationQueueTests" */;
+			buildConfigurationList = 08A51FBB20A540C4007B3E63 /* Build configuration list for PBXNativeTarget "OperationQueueTests" */;
 			buildPhases = (
 				08A51FAF20A540C4007B3E63 /* Sources */,
 				08A51FB020A540C4007B3E63 /* Frameworks */,
@@ -149,9 +151,9 @@
 			dependencies = (
 				08A51FBA20A540C4007B3E63 /* PBXTargetDependency */,
 			);
-			name = MDOperationQueueTests;
+			name = OperationQueueTests;
 			productName = MDOperationQueueTests;
-			productReference = 08A51FB320A540C4007B3E63 /* MDOperationQueueTests.xctest */;
+			productReference = 08A51FB320A540C4007B3E63 /* OperationQueueTests.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
 		};
 /* End PBXNativeTarget section */
@@ -171,7 +173,7 @@
 					};
 				};
 			};
-			buildConfigurationList = 08A51F9620A53CA7007B3E63 /* Build configuration list for PBXProject "MDOperationQueue" */;
+			buildConfigurationList = 08A51F9620A53CA7007B3E63 /* Build configuration list for PBXProject "OperationQueue" */;
 			compatibilityVersion = "Xcode 9.3";
 			developmentRegion = en;
 			hasScannedForEncodings = 0;
@@ -183,8 +185,8 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				08A51F9B20A53CA7007B3E63 /* MDOperationQueue */,
-				08A51FB220A540C4007B3E63 /* MDOperationQueueTests */,
+				08A51F9B20A53CA7007B3E63 /* OperationQueue */,
+				08A51FB220A540C4007B3E63 /* OperationQueueTests */,
 			);
 		};
 /* End PBXProject section */
@@ -229,7 +231,7 @@
 /* Begin PBXTargetDependency section */
 		08A51FBA20A540C4007B3E63 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			target = 08A51F9B20A53CA7007B3E63 /* MDOperationQueue */;
+			target = 08A51F9B20A53CA7007B3E63 /* OperationQueue */;
 			targetProxy = 08A51FB920A540C4007B3E63 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
@@ -360,14 +362,14 @@
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
-				INFOPLIST_FILE = MDOperationQueue/Info.plist;
+				INFOPLIST_FILE = OperationQueue/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 					"@loader_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.markejave.MDOperationQueue;
+				PRODUCT_BUNDLE_IDENTIFIER = com.markejave.OperationQueue;
 				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
 				SKIP_INSTALL = YES;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -383,14 +385,14 @@
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
-				INFOPLIST_FILE = MDOperationQueue/Info.plist;
+				INFOPLIST_FILE = OperationQueue/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 					"@loader_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.markejave.MDOperationQueue;
+				PRODUCT_BUNDLE_IDENTIFIER = com.markejave.OperationQueue;
 				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
 				SKIP_INSTALL = YES;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -432,7 +434,7 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		08A51F9620A53CA7007B3E63 /* Build configuration list for PBXProject "MDOperationQueue" */ = {
+		08A51F9620A53CA7007B3E63 /* Build configuration list for PBXProject "OperationQueue" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				08A51FA220A53CA7007B3E63 /* Debug */,
@@ -441,7 +443,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		08A51FA420A53CA7007B3E63 /* Build configuration list for PBXNativeTarget "MDOperationQueue" */ = {
+		08A51FA420A53CA7007B3E63 /* Build configuration list for PBXNativeTarget "OperationQueue" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				08A51FA520A53CA7007B3E63 /* Debug */,
@@ -450,7 +452,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		08A51FBB20A540C4007B3E63 /* Build configuration list for PBXNativeTarget "MDOperationQueueTests" */ = {
+		08A51FBB20A540C4007B3E63 /* Build configuration list for PBXNativeTarget "OperationQueueTests" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				08A51FBC20A540C4007B3E63 /* Debug */,

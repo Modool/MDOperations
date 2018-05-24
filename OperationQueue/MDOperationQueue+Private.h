@@ -16,7 +16,6 @@
 @end
 
 @interface MDOperationQueue () {
-    @protected
     NSMutableArray<MDOperation *> *_mutableOperations;
     NSMutableArray<MDOperation *> *_excutingOperations;
     
@@ -35,5 +34,7 @@
 
 - (void)_willBeginSchedule;
 - (void)_didEndSchedule;
+
+- (void)_lock:(void (^)(void))block;
 
 @end
