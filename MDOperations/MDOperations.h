@@ -6,11 +6,11 @@
 //  Copyright © 2018年 markejave. All rights reserved.
 //
 
-//! Project version number for OperationQueue.
-FOUNDATION_EXPORT double OperationQueueVersionNumber;
+//! Project version number for MDOperations.
+FOUNDATION_EXPORT double MDOperationsVersionNumber;
 
-//! Project version string for OperationQueue.
-FOUNDATION_EXPORT const unsigned char OperationQueueVersionString[];
+//! Project version string for MDOperations.
+FOUNDATION_EXPORT const unsigned char MDOperationsVersionString[];
 
 #import <MDOperations/MDOperation.h>
-#import <OperationQueue/MDOperationQueue.h>
+#import <MDOperations/MDOperationQueue.h>
