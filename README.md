@@ -32,7 +32,7 @@ end
 * Installation with Carthage
 
 ```
-github "Modool/MDOperationQueue" ~> 1.0.2
+github "Modool/MDOperationQueue" ~> 1.0.0
 ```
 
 * Manual Import
